@@ -10,12 +10,19 @@ import Foundation
 
 class ViewModel {
     
-    func search(for keyword: String, completion: @escaping ([Book]) -> ()) {
+    var books: [Book]
+    
+    init() {
+        books = []
+    }
+    
+    func search(for keyword: String, completion: @escaping () -> ()) {
         
         guard let url = URL(string: "https://www.googleapis.com/books/v1/volumes?q=" + keyword) else { return }
         
-        NetworkManager.sharedInstance.getBooks(url: url) { books in
-            completion(books)
+        NetworkWorker.sharedInstance.getBooks(url: url) { books in
+            self.books = books
+            completion()
         }
     }
 }
